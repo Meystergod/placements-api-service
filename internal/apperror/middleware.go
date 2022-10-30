@@ -37,7 +37,7 @@ func Middleware(h appHandler) http.HandlerFunc {
 				err = err.(*AppError)
 				w.WriteHeader(http.StatusBadRequest)
 				w.Write(NewApiError("EMPTY_FIELD").Marshal())
-				logger.Errorf("%s with status code: %d", err.Error(), http.StatusBadRequest)
+				logger.Errorf("%s with status code: %d", err.Error(), http.StatusBadRequest, "EMPTY_FIELD")
 				return
 			}
 			w.WriteHeader(http.StatusTeapot)
