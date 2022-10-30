@@ -36,7 +36,7 @@ func Middleware(h appHandler) http.HandlerFunc {
 				}
 				err = err.(*AppError)
 				w.WriteHeader(http.StatusBadRequest)
-				w.Write(ErrorEmptySchema.Marshal())
+				//w.Write(ErrorEmptySchema.Marshal())
 				logger.Errorf("%s with status code: %d", err.Error(), http.StatusBadRequest)
 				return
 			}
