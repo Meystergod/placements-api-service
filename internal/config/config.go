@@ -2,6 +2,7 @@ package config
 
 import (
 	"flag"
+	"github.com/Meystergod/placements-api-service/internal/apperror"
 	"github.com/Meystergod/placements-api-service/internal/validator"
 	"github.com/ilyakaznacheev/cleanenv"
 	"log"
@@ -47,6 +48,10 @@ func GetArgs(cfg *Config) error {
 	flag.StringVar(&port, "p", "", "port")
 	flag.StringVar(&partners, "d", "", "partners")
 	flag.Parse()
+
+	if port == "" || partners == "" {
+		return apperror.NewAppError(nil, "no args", "", "AS-000500")
+	}
 
 	partnersList := strings.Split(partners, ",")
 
