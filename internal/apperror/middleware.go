@@ -34,10 +34,9 @@ func Middleware(h appHandler) http.HandlerFunc {
 					logger.Errorf("%s with status code: %d", ErrorEncode.Error(), http.StatusBadRequest)
 					return
 				}
-				// TODO: parse and create json serializer for err
 				err = err.(*AppError)
 				w.WriteHeader(http.StatusBadRequest)
-				w.Write([]byte(err.Error()))
+				w.Write(ErrorEmptySchema.Marshal())
 				logger.Errorf("%s with status code: %d", err.Error(), http.StatusBadRequest)
 				return
 			}

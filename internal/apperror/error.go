@@ -9,6 +9,7 @@ var (
 	ErrorNewRequestWrap = NewAppError(nil, "new request wrap error", "", "AS-000004")
 	ErrorSendRequest    = NewAppError(nil, "send request error", "", "AS-000005")
 	ErrorParseBody      = NewAppError(nil, "parse response body error", "", "AS-000006")
+	ErrorEmptySchema    = NewAppError(nil, "empty required field", "", "000007")
 	ErrorInvalidPort    = NewAppError(nil, "invalid port", "", "AS-000201")
 	ErrorInvalidHost    = NewAppError(nil, "invalid host ip4", "", "AS-000202")
 )
