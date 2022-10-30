@@ -37,7 +37,7 @@ type Config struct {
 	} `yaml:"http"`
 }
 
-const pathToConfig = "../../configs/config.local.yaml"
+const pathToConfig = "/home/runner/work/placements-api-service/placements-api-service/configs/config.local.yaml"
 
 var instance *Config
 var once sync.Once
