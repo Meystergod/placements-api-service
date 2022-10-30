@@ -21,6 +21,16 @@ type AppError struct {
 	Code       string `json:"code"`
 }
 
+type ApiError struct {
+	Message string `json:"message"`
+}
+
+func NewApiError(message string) *ApiError {
+	return &ApiError{
+		Message: message,
+	}
+}
+
 func NewAppError(err error, message, devMessage, code string) *AppError {
 	return &AppError{
 		Err:        err,
@@ -28,6 +38,14 @@ func NewAppError(err error, message, devMessage, code string) *AppError {
 		DevMessage: devMessage,
 		Code:       code,
 	}
+}
+
+func (er *ApiError) Marshal() []byte {
+	marshal, err := json.Marshal(er)
+	if err != nil {
+		return nil
+	}
+	return marshal
 }
 
 func (e *AppError) Error() string {
