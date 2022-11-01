@@ -2,15 +2,15 @@ package config
 
 import (
 	"flag"
-	"github.com/Meystergod/placements-api-service/internal/apperror"
-	"github.com/Meystergod/placements-api-service/internal/validator"
-	"github.com/ilyakaznacheev/cleanenv"
 	"log"
 	"strings"
 	"sync"
-)
 
-// TODO: разобраться с конфигом, проверить и доработать его
+	"github.com/Meystergod/placements-api-service/internal/apperror"
+	"github.com/Meystergod/placements-api-service/internal/validator"
+
+	"github.com/ilyakaznacheev/cleanenv"
+)
 
 type Config struct {
 	AppConfig struct {
@@ -18,14 +18,11 @@ type Config struct {
 		IsDevelopment bool   `yaml:"is-development" env:"IS_DEV" env-default:"false"`
 		LogLevel      string `yaml:"log-level" env:"LOG_LEVEL" env-default:"trace"`
 	} `yaml:"app-config"`
-
 	HTTP struct {
 		IP       string   `yaml:"ip" env:"BIND_IP" env-default:"0.0.0.0"`
 		Port     string   `env:"PORT" env-required:"true"`
 		Partners []string `env:"PARTNERS" env-required:"true"`
-		//ReadTimeout  time.Duration `yaml:"read-timeout" env:"HTTP-READ-TIMEOUT"`
-		//WriteTimeout time.Duration `yaml:"write-timeout" env:"HTTP-WRITE-TIMEOUT"`
-		CORS struct {
+		CORS     struct {
 			AllowedMethods     []string `yaml:"allowed-methods" env:"HTTP-CORS-ALLOWED-METHODS"`
 			AllowedOrigins     []string `yaml:"allowed-origins" env:"HTTP-CORS-ALLOWED-ORIGINS"`
 			AllowCredentials   bool     `yaml:"allow-credentials" env:"HTTP-CORS-ALLOW-CREDENTIALS"`
@@ -36,8 +33,6 @@ type Config struct {
 		} `yaml:"cors"`
 	} `yaml:"http"`
 }
-
-const pathToConfig = "/home/runner/work/placements-api-service/placements-api-service/configs/config.local.yaml"
 
 var instance *Config
 var once sync.Once
@@ -50,7 +45,7 @@ func GetArgs(cfg *Config) error {
 	flag.Parse()
 
 	if port == "" || partners == "" {
-		return apperror.NewAppError(nil, "no args", "", "AS-000500")
+		return apperror.ErrorNoArgs
 	}
 
 	partnersList := strings.Split(partners, ",")
@@ -76,7 +71,7 @@ func GetConfig() *Config {
 			log.Fatal(err)
 		}
 
-		if err := cleanenv.ReadConfig(pathToConfig, instance); err != nil {
+		if err := cleanenv.ReadConfig(CONFIG_PATH, instance); err != nil {
 			helpDescription := "Help Config Description"
 			help, _ := cleanenv.GetDescription(instance, &helpDescription)
 			log.Print(help)

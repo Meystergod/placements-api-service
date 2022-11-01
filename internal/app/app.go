@@ -4,16 +4,19 @@ import (
 	"context"
 	"errors"
 	"fmt"
-	"github.com/Meystergod/placements-api-service/pkg/logging"
+	"github.com/Meystergod/placements-api-service/pkg/shutdown"
+	"golang.org/x/sync/errgroup"
 	"net"
 	"net/http"
+	"os"
+	"syscall"
 	"time"
 
-	"golang.org/x/sync/errgroup"
-
 	"github.com/Meystergod/placements-api-service/internal/config"
-	"github.com/Meystergod/placements-api-service/internal/placements"
+	"github.com/Meystergod/placements-api-service/internal/handlers/placements"
 	httpclient "github.com/Meystergod/placements-api-service/pkg/client"
+	"github.com/Meystergod/placements-api-service/pkg/logging"
+
 	"github.com/julienschmidt/httprouter"
 	"github.com/rs/cors"
 )
@@ -89,22 +92,21 @@ func (s *App) startHTTP(ctx context.Context) error {
 
 	s.httpServer = &http.Server{
 		Handler:      handler,
-		WriteTimeout: 250 * time.Millisecond,
-		ReadTimeout:  250 * time.Millisecond,
+		WriteTimeout: 300 * time.Millisecond,
+		ReadTimeout:  300 * time.Millisecond,
 	}
+
+	go shutdown.Graceful(s.logger, []os.Signal{syscall.SIGABRT, syscall.SIGQUIT, syscall.SIGHUP, os.Interrupt, syscall.SIGTERM}, s.httpServer)
+
+	logger.Info("application initialized and started")
 
 	if err = s.httpServer.Serve(listener); err != nil {
 		switch {
 		case errors.Is(err, http.ErrServerClosed):
-			s.logger.Warning("server shutdown")
+			logger.Warning("server shutdown")
 		default:
-			s.logger.Fatal(err)
+			logger.Fatal(err)
 		}
-	}
-
-	err = s.httpServer.Shutdown(ctx)
-	if err != nil {
-		s.logger.Fatal(err)
 	}
 
 	return err

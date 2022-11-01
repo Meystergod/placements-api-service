@@ -33,16 +33,22 @@ func Middleware(h appHandler) http.HandlerFunc {
 					w.Write(ErrorDecode.Marshal())
 					logger.Errorf("%s with status code: %d", ErrorEncode.Error(), http.StatusBadRequest)
 					return
+				} else if errors.Is(err, ErrorValidate) {
+					w.WriteHeader(http.StatusBadRequest)
+					w.Write(ErrorValidate.Marshal())
+					logger.Errorf("%s with status code: %d", ErrorValidate.Error(), http.StatusBadRequest)
+					return
 				}
 				err = err.(*AppError)
 				w.WriteHeader(http.StatusBadRequest)
-				w.Write(NewApiError("EMPTY_FIELD").Marshal())
-				logger.Errorf("EMPTY_FIELD")
+				w.Write(ErrorEmptyField.Marshal())
+				logger.Errorf("%s with status code: %d", ErrorEmptyField.Error(), http.StatusBadRequest)
 				return
 			}
 			w.WriteHeader(http.StatusTeapot)
 			w.Write(systemError(err).Marshal())
 			logger.Errorf("%s with status code: %d", systemError(err).Error(), http.StatusTeapot)
+			return
 		}
 	}
 }
