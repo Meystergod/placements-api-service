@@ -3,26 +3,28 @@ package apperror
 import "encoding/json"
 
 var (
-	ErrorNotFound    = NewAppError(nil, "not found")
-	ErrorDecode      = NewAppError(nil, "decoding failed")
-	ErrorEncode      = NewAppError(nil, "encoding failed")
-	ErrorValidate    = NewAppError(nil, "error validate schema")
-	ErrorEmptyField  = NewAppError(nil, "empty field")
-	ErrorInvalidPort = NewAppError(nil, "invalid port")
-	ErrorInvalidHost = NewAppError(nil, "invalid host ip4")
-	ErrorRegexMatch  = NewAppError(nil, "match regex error")
-	ErrorNoArgs      = NewAppError(nil, "no command arguments")
+	ErrorNotFound    = NewAppError(nil, "not found", 0)
+	ErrorDecode      = NewAppError(nil, "decoding failed", 0)
+	ErrorEncode      = NewAppError(nil, "encoding failed", 0)
+	ErrorValidate    = NewAppError(nil, "error validate schema", 400)
+	ErrorEmptyField  = NewAppError(nil, "empty field", 0)
+	ErrorInvalidPort = NewAppError(nil, "invalid port", 0)
+	ErrorInvalidHost = NewAppError(nil, "invalid host ip4", 0)
+	ErrorRegexMatch  = NewAppError(nil, "match regex error", 0)
+	ErrorNoArgs      = NewAppError(nil, "no command arguments", 0)
 )
 
 type AppError struct {
 	Err     error  `json:"-"`
 	Message string `json:"message"`
+	Code    uint   `json:"status_code"`
 }
 
-func NewAppError(err error, message string) *AppError {
+func NewAppError(err error, message string, code uint) *AppError {
 	return &AppError{
 		Err:     err,
 		Message: message,
+		Code:    code,
 	}
 }
 
@@ -43,5 +45,5 @@ func (e *AppError) Marshal() []byte {
 }
 
 func systemError(err error) *AppError {
-	return NewAppError(err, "internal system error")
+	return NewAppError(err, "internal system error", 0)
 }
