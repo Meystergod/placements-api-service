@@ -48,7 +48,7 @@ func (h *handler) HandlePlacementRequest(w http.ResponseWriter, req *http.Reques
 	if err != nil {
 		return apperror.ErrorDecode
 	}
-	h.logger.Info("request body decoding completed successfully")
+	//h.logger.Info("request body decoding completed successfully")
 
 	h.logger.Info("request validating started")
 	v := validator.New()
@@ -56,7 +56,7 @@ func (h *handler) HandlePlacementRequest(w http.ResponseWriter, req *http.Reques
 	if err != nil {
 		return apperror.ErrorValidate
 	}
-	h.logger.Info("request validating completed successfully")
+	//h.logger.Info("request validating completed successfully")
 
 	h.logger.Info("creating partner request")
 	partnerRequest := placementRequest.ToPartnerRequest()
@@ -95,7 +95,7 @@ func postToAllPartners(logger *logging.Logger, client *http.Client, req partner.
 
 	close(c)
 
-	logger.Info("converting chan to slice of strings")
+	//logger.Info("converting chan to slice of strings")
 	return services.ChanToSlice(c).([]string)
 }
 
@@ -114,7 +114,7 @@ func postToPartner(l *logging.Logger, wg *sync.WaitGroup, client *http.Client, r
 		logger.WithError(err).Error("json encoding of partner request failed")
 		return
 	}
-	logger.Info("json encoding of partner request completed successfully")
+	//logger.Info("json encoding of partner request completed successfully")
 
 	logger.Info("creating new http post request using partner request json")
 	req, err := http.NewRequest(http.MethodPost, url, bytes.NewBuffer(partnerJSONRequest))
@@ -122,7 +122,7 @@ func postToPartner(l *logging.Logger, wg *sync.WaitGroup, client *http.Client, r
 		logger.WithError(err).Error("creating new http post request failed")
 		return
 	}
-	logger.Info("creating new http post request completed successfully")
+	//logger.Info("creating new http post request completed successfully")
 
 	logger.Info("sending new created http post request")
 	res, err := client.Do(req)
@@ -130,7 +130,7 @@ func postToPartner(l *logging.Logger, wg *sync.WaitGroup, client *http.Client, r
 		logger.WithError(err).Error("sending new http post request failed")
 		return
 	}
-	logger.Info("sending new created http post request completed successfully")
+	//logger.Info("sending new created http post request completed successfully")
 
 	defer res.Body.Close()
 
@@ -145,7 +145,7 @@ func postToPartner(l *logging.Logger, wg *sync.WaitGroup, client *http.Client, r
 		logger.WithError(err).Error("reading all from response body failed")
 		return
 	}
-	logger.Info("reading all from response body completed successfully")
+	//logger.Info("reading all from response body completed successfully")
 
 	c <- string(body)
 }
