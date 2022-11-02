@@ -108,7 +108,7 @@ func postToPartner(l *logging.Logger, wg *sync.WaitGroup, client *http.Client, r
 		"partner url": partnerUrl,
 	})
 
-	logger.Info("start json encoding of partner request")
+	//logger.Info("start json encoding of partner request")
 	partnerJSONRequest, err := json.Marshal(r)
 	if err != nil {
 		logger.WithError(err).Error("json encoding of partner request failed")
@@ -116,7 +116,7 @@ func postToPartner(l *logging.Logger, wg *sync.WaitGroup, client *http.Client, r
 	}
 	//logger.Info("json encoding of partner request completed successfully")
 
-	logger.Info("creating new http post request using partner request json")
+	//logger.Info("creating new http post request using partner request json")
 	req, err := http.NewRequest(http.MethodPost, url, bytes.NewBuffer(partnerJSONRequest))
 	if err != nil {
 		logger.WithError(err).Error("creating new http post request failed")
@@ -124,7 +124,7 @@ func postToPartner(l *logging.Logger, wg *sync.WaitGroup, client *http.Client, r
 	}
 	//logger.Info("creating new http post request completed successfully")
 
-	logger.Info("sending new created http post request")
+	//logger.Info("sending new created http post request")
 	res, err := client.Do(req)
 	if err != nil {
 		logger.WithError(err).Error("sending new http post request failed")
@@ -134,12 +134,12 @@ func postToPartner(l *logging.Logger, wg *sync.WaitGroup, client *http.Client, r
 
 	defer res.Body.Close()
 
-	logger.Infof("response status code is %d", res.StatusCode)
+	//logger.Infof("response status code is %d", res.StatusCode)
 	if res.StatusCode == http.StatusNoContent {
 		return
 	}
 
-	logger.Info("reading all from response body")
+	//logger.Info("reading all from response body")
 	body, err := io.ReadAll(res.Body)
 	if err != nil {
 		logger.WithError(err).Error("reading all from response body failed")
