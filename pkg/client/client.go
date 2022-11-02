@@ -7,6 +7,6 @@ import (
 
 func NewClient() *http.Client {
 	return &http.Client{
-		Timeout: 250 * time.Millisecond,
+		Timeout: 200 * time.Millisecond,
 	}
 }

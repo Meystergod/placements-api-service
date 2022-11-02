@@ -92,8 +92,8 @@ func (s *App) startHTTP(ctx context.Context) error {
 
 	s.httpServer = &http.Server{
 		Handler:      handler,
-		WriteTimeout: 300 * time.Millisecond,
-		ReadTimeout:  300 * time.Millisecond,
+		WriteTimeout: 250 * time.Millisecond,
+		ReadTimeout:  250 * time.Millisecond,
 	}
 
 	go shutdown.Graceful(s.logger, []os.Signal{syscall.SIGABRT, syscall.SIGQUIT, syscall.SIGHUP, os.Interrupt, syscall.SIGTERM}, s.httpServer)
