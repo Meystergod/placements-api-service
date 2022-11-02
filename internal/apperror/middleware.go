@@ -36,8 +36,7 @@ func Middleware(h appHandler) http.HandlerFunc {
 				} else if errors.Is(err, ErrorValidate) {
 					w.WriteHeader(http.StatusBadRequest)
 					w.Write(ErrorValidate.Marshal())
-					logger.Errorf("status_code: %d error: %s", http.StatusBadRequest, ErrorValidate.Error())
-					//logger.Errorf("%s with status code: %d", ErrorValidate.Error(), http.StatusBadRequest)
+					logger.Errorf("%s with status code: %d. error: EMPTY_FIELD", ErrorValidate.Error(), http.StatusBadRequest)
 					return
 				}
 				err = err.(*AppError)
