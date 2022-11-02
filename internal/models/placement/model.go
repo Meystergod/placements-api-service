@@ -29,7 +29,7 @@ func NewResponse(logger *logging.Logger, p Request, responses []string) Response
 
 	var wg sync.WaitGroup
 
-	//logger.Info("start converting string slice of responses to map")
+	logger.Info("converting string slice of responses to map")
 	for i := range responses {
 		logger.Infof("try unmarshalling %d response", i+1)
 		if err := json.Unmarshal([]byte(responses[i]), &partnerResponsesList[i]); err != nil {
@@ -37,7 +37,7 @@ func NewResponse(logger *logging.Logger, p Request, responses []string) Response
 			continue
 		}
 		wg.Add(1)
-		//logger.Info("converting to map")
+
 		go partnerResponsesList[i].ToMap(&wg, partnerResponsesSet)
 	}
 
@@ -45,7 +45,7 @@ func NewResponse(logger *logging.Logger, p Request, responses []string) Response
 
 	var placementResponseImpList []placementImp.Imp
 
-	//logger.Info("start find max price and creating placement response")
+	logger.Info("finding max price")
 	for j := range p.Tiles {
 		if len(partnerResponsesSet[p.Tiles[j].ID]) != 0 {
 			partnerMaxValue := findMaxPrice(partnerResponsesSet[p.Tiles[j].ID])
