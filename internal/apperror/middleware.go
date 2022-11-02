@@ -1,6 +1,7 @@
 package apperror
 
 import (
+	"encoding/json"
 	"errors"
 	"net/http"
 
@@ -8,6 +9,18 @@ import (
 )
 
 type appHandler func(w http.ResponseWriter, req *http.Request) error
+
+type customError struct {
+	Error string
+}
+
+func (e *customError) Marshal() []byte {
+	marshal, err := json.Marshal(e)
+	if err != nil {
+		return nil
+	}
+	return marshal
+}
 
 func Middleware(h appHandler) http.HandlerFunc {
 	return func(w http.ResponseWriter, req *http.Request) {
@@ -35,7 +48,8 @@ func Middleware(h appHandler) http.HandlerFunc {
 					return
 				} else if errors.Is(err, ErrorValidate) {
 					w.WriteHeader(http.StatusBadRequest)
-					w.Write(ErrorValidate.Marshal())
+					r := customError{Error: "EMPTY_FIELD"}
+					w.Write(r.Marshal())
 					logger.Errorf("%s with status code: %d", ErrorValidate.Error(), http.StatusBadRequest)
 					return
 				}
