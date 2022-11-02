@@ -4,7 +4,6 @@ import (
 	"context"
 	"errors"
 	"fmt"
-	"github.com/Meystergod/placements-api-service/pkg/shutdown"
 	"golang.org/x/sync/errgroup"
 	"net"
 	"net/http"
@@ -16,6 +15,7 @@ import (
 	"github.com/Meystergod/placements-api-service/internal/handlers/placements"
 	httpclient "github.com/Meystergod/placements-api-service/pkg/client"
 	"github.com/Meystergod/placements-api-service/pkg/logging"
+	"github.com/Meystergod/placements-api-service/pkg/shutdown"
 
 	"github.com/julienschmidt/httprouter"
 	"github.com/rs/cors"

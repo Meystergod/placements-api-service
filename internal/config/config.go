@@ -71,7 +71,7 @@ func GetConfig() *Config {
 			log.Fatal(err)
 		}
 
-		if err := cleanenv.ReadConfig(CONFIG_PATH, instance); err != nil {
+		if err := cleanenv.ReadConfig(TESTS_CONFIG_PATH, instance); err != nil {
 			helpDescription := "Help Config Description"
 			help, _ := cleanenv.GetDescription(instance, &helpDescription)
 			log.Print(help)

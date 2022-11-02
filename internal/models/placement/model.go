@@ -60,6 +60,10 @@ func NewResponse(logger *logging.Logger, p Request, responses []string) Response
 		}
 	}
 
+	if len(placementResponseImpList) == 0 {
+		placementResponseImpList = []placementImp.Imp{}
+	}
+
 	return Response{
 		ID:  p.ID,
 		Imp: placementResponseImpList,
